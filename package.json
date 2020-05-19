@@ -1,0 +1,28 @@
+{
+  "name": "react-sierpinski",
+  "version": "1.0.0",
+  "description": "Sierpinski components with hooks",
+  "browser": "src/Triangle.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "sierpinski",
+    "fractal",
+    "react"
+  ],
+  "author": "ashnur",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^7.0.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1"
+  },
+  "dependencies": {
+    "react": "0.0.0-experimental-33c3af284",
+    "react-dom": "0.0.0-experimental-33c3af284"
+  }
+}
