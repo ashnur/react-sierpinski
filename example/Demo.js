@@ -13,8 +13,8 @@ const containerStyle = {
   background: '#eee'
 }
 
-const initSize = 1000
-const targetSize = 50
+const initSize = 768
+const targetSize = 24
 
 function Demo (props) {
   const [seconds, setSeconds] = React.useState({ seconds: 0 })
@@ -32,8 +32,11 @@ function Demo (props) {
   const t = (elapsed / 1000) % 10
   const scale = 1 + (t > 5 ? 10 - t : t) / 10
   const [downRate, setDownRate] = React.useState(30)
+  const [tsEnabled, setTS] = React.useState(false)
 
   return c('div')(null,
+    c('label')(null, 'time slicing',
+    c('input')({ id: "time-slicing-enabled", type: "checkbox" , checked: tsEnabled, onChange: (ev) => {setTS(!!ev.target.checked); update(!!ev.target.checked) } })),
     c('label')(null, 'render lag: ',
     c('input')({ onInput: onValueChange(setDownRate), type: 'range', min: 1, max: 1000, value: downRate })),
     c('div')({ style: { ...containerStyle, transform: `scaleX(${scale / 2.6}) scaleY(0.7) translateZ(0.1px)` } },
@@ -41,12 +44,35 @@ function Demo (props) {
 }
 
 const start = new Date().getTime()
-function update () {
-  ReactDOM.render(
-    c(React.StrictMode)({}, c(Demo)({ elapsed: new Date().getTime() - start })),
-    document.getElementById('container')
-  )
+const oob = document.createElement('div')
+const exp = document.createElement('div')
+const root = ReactDOM.unstable_createRoot( exp )
+
+function once(fn){
+  let called = false
+  return () => called ? (() => {})() :  (called=true, fn())  
+}
+
+function showhide(a, b){
+  a.style.display = 'block'
+  b.style.display = 'none'
+}
+function update (checked=false) {
+  if ( checked ) {
+    showhide(exp, oob)
+    root.render(
+      c(React.StrictMode)({}, c(Demo)({ elapsed: new Date().getTime() - start})),
+    )
+  } else {
+    showhide(oob, exp)
+    ReactDOM.render(
+      c(React.StrictMode)({}, c(Demo)({ elapsed: new Date().getTime() - start})),
+      document.getElementById('container')
+    )
+  }
   requestAnimationFrame(update)
 }
 
+document.getElementById('container').appendChild(oob)
+document.getElementById('container').appendChild(exp)
 requestAnimationFrame(update)

@@ -22,4 +22,4 @@ function SierpinskiTriangle (props) {
   )
 }
 
-module.exports = React.memo(SierpinskiTriangle)
+module.exports = SierpinskiTriangle
