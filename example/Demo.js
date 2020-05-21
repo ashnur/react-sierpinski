@@ -1,10 +1,8 @@
 const React = require('react')
 const ReactDOM = require('react-dom')
 const c = require('../src/utils/createElement.js')
-const div = require('../src/utils/div.js')
-const input = require('../src/utils/input.js')
-const onValueChange = require('../src/utils/onValueChange.js')
 const SierpinskiTriangle = require('../src/Triangle.js')
+const onValueChange = (fn) => (ev) => fn(ev.target.value)
 const containerStyle = {
   position: 'absolute',
   transformOrigin: '0 0',
@@ -23,7 +21,10 @@ function Demo (props) {
 
   React.useEffect(() => {
     const intervalId = setInterval(() => {
-      requestAnimationFrame(() => { setSeconds((state) => ({ seconds: (state.seconds % 10) + 1 })) })
+      setSeconds((state) => ({ seconds: (state.seconds % 10) + 1 }))
+      //console.log(Object.keys(ReactDOM))
+      //ReactDOM.unstable_batchedUpdates(() => { setSeconds((state) => ({ seconds: (state.seconds % 10) + 1 })) })
+      // ReactDOM.deferredUpdates(() => { setSeconds((state) => ({ seconds: (state.seconds % 10) + 1 })) })
     }, 1000)
     return () => { clearInterval(intervalId) }
   }, [setSeconds])
@@ -32,9 +33,10 @@ function Demo (props) {
   const scale = 1 + (t > 5 ? 10 - t : t) / 10
   const [downRate, setDownRate] = React.useState(30)
 
-  return div(null,
-    input({ onInput: onValueChange(setDownRate), type: 'range', min: 1, max: 300, value: downRate }),
-    div({ style: { ...containerStyle, transform: `scaleX(${scale / 2.6}) scaleY(0.7) translateZ(0.1px)` } },
+  return c('div')(null,
+    c('label')(null, 'render lag: ',
+    c('input')({ onInput: onValueChange(setDownRate), type: 'range', min: 1, max: 1000, value: downRate })),
+    c('div')({ style: { ...containerStyle, transform: `scaleX(${scale / 2.6}) scaleY(0.7) translateZ(0.1px)` } },
       c(SierpinskiTriangle)({ key: 'top', x: 0, y: 0, s: initSize, ts: targetSize, sdr: downRate / 1000 }, seconds)))
 }
 

@@ -14,6 +14,7 @@ function SierpinskiTriangle (props) {
   while (performance.now() < e) {
     // Artificially long execution time.
   }
+
   return props.s <= props.ts ? c(Dot)({ x, y, s, text }) : frg(null,
     React.createElement(SierpinskiTriangle, { key: 'top', x, y: y - hs, s, sdr, ts: props.ts }, props.children),
     React.createElement(SierpinskiTriangle, { key: 'left', x: x - s, y: y + hs, s, sdr, ts: props.ts }, props.children),
